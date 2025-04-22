@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Results - Heart Disease Risk Assessment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 2rem;
+            background-color: #f8f9fa;
+        }
+        .results-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .header {
+            color: #dc3545;
+            margin-bottom: 2rem;
+        }
+        .risk-level {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        .risk-level.low { color: #198754; }
+        .risk-level.moderate { color: #ffc107; }
+        .risk-level.high { color: #dc3545; }
+        .risk-level.very-high { color: #6f42c1; }
+        .section-header {
+            color: #dc3545;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #dc3545;
+        }
+        .factor-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .factor-card.high-risk {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .recommendation-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .recommendation-card.urgent {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="results-container">
+                    <h1 class="header text-center mb-4">❤️ Assessment Results</h1>
+                    
+                    <div class="text-center">
+                        <h2>Your Heart Disease Risk Assessment</h2>
+                        <div class="risk-level {{ risk_class }}">
+                            {{ risk_level }}
+                        </div>
+                        <p class="lead">Probability: {{ "%.1f"|format(probability * 100) }}%</p>
+                    </div>
+
+                    <h2 class="section-header">Risk Factors Identified</h2>
+                    {% if risk_factors %}
+                        {% for factor in risk_factors %}
+                            <div class="factor-card {% if factor.severity == 'high' %}high-risk{% endif %}">
+                                <h5 class="mb-2">{{ factor.name }}</h5>
+                                <p class="mb-0">{{ factor.description }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No significant risk factors identified.</p>
+                    {% endif %}
+
+                    <h2 class="section-header">Recommendations</h2>
+                    {% if recommendations %}
+                        {% for recommendation in recommendations %}
+                            <div class="recommendation-card {% if recommendation.priority == 'urgent' %}urgent{% endif %}">
+                                <h5 class="mb-2">{{ recommendation.title }}</h5>
+                                <p class="mb-0">{{ recommendation.description }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No specific recommendations at this time.</p>
+                    {% endif %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                            <i class="fas fa-chart-line me-2"></i>View Dashboard
+                        </a>
+                        <a href="{{ url_for('download_report', assessment_id=assessment.id) }}" class="btn btn-success">
+                            <i class="fas fa-download me-2"></i>Download Report
+                        </a>
+                        <a href="{{ url_for('assessment') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-redo me-2"></i>New Assessment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
